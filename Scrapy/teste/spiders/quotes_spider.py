@@ -1,3 +1,5 @@
+import datetime
+from sqlite3 import Timestamp
 import scrapy
 from cassandra.cluster import Cluster
 
@@ -11,9 +13,13 @@ session = cluster.connect('aoop')
 # Prepared Statments Cassandra
 insertCassandra = session.prepare("INSERT INTO wikipedia(id, link, title, content, dateTime) VALUES (blobAsTimeuuid(now()), ?, ?, ?, totimestamp(now()));")
 
+import pymongo
+from pymongo import MongoClient
 # To Run: scrapy crawl quotes -o quotes.jl
 
-
+cluster = MongoClient("mongodb://localhost:27017/")
+db = cluster["TP1-B"]
+collection = db["TP1-B"]
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
     start_urls = [
@@ -41,7 +47,7 @@ class QuotesSpider(scrapy.Spider):
 
                     break
 
-        # Buscar o resumo do acontecimento
+        # Buscar o resumo do acontecimentocl
         else:
             title = response.css('h1.firstHeading::text').get()
 
@@ -62,6 +68,12 @@ class QuotesSpider(scrapy.Spider):
 
                     session.execute(insertCassandra, [r[0], title, resumo])
 
+                    #print('sjkbdsakjdkbjsa' + resumo)
+                    post = {  'link': r[0],
+                        'titulo': title,
+                        'resumo': resumo,
+                        'tempo' : datetime.datetime.now()}
+                    collection.insert_one(post)
                     break
 
         for a in links:
