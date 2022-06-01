@@ -1,0 +1,22 @@
+create keyspace AOOP with replication = {'class' : 'SimpleStrategy', 'replication_factor':1};
+
+CREATE TABLE wikipedia
+(
+    id          timeuuid,
+    link        text,
+    title       text,
+    content     text,
+    dateTime    timestamp,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO wikipedia(id, link, title, content, dateTime)
+VALUES (blobAsTimeuuid(now()),
+        '/wiki/2022_Indianapolis_500',
+        '2022 Indianapolis 500',
+        '<p><b>Yasin Malik</b> (born 3 April 1966) is a Kashmiri separatist leader and former militant who advocates the separation of <a href=\"/wiki/Kashmir\" title=\"Kashmir\">Kashmir</a> from both <a href=\"/wiki/India\" title=\"India\">India</a> and <a href=\"/wiki/Pakistan\" title=\"Pakistan\">Pakistan</a>.<sup id=\"cite_ref-FOOTNOTEBose2003126_2-0\" class=\"reference\"><a href=\"#cite_note-FOOTNOTEBose2003126-2\">[2]</a></sup> He is the Chairman of the <a href=\"/wiki/Jammu_Kashmir_Liberation_Front\" title=\"Jammu Kashmir Liberation Front\">Jammu Kashmir Liberation Front</a>, which originally spearheaded armed militancy in the <a href=\"/wiki/Kashmir_Valley\" title=\"Kashmir Valley\">Kashmir Valley</a>.<sup id=\"cite_ref-3\" class=\"reference\"><a href=\"#cite_note-3\">[3]</a></sup> Malik renounced violence in 1994 and adopted <a href=\"/wiki/Pacifism\" title=\"Pacifism\">peaceful methods</a> to come to a settlement of the <a href=\"/wiki/Kashmir_conflict\" title=\"Kashmir conflict\">Kashmir conflict</a>. In May 2022, Malik pleaded guilty to charges of criminal conspiracy and waging war against the state,<sup id=\"cite_ref-TOI_19_May_2022_4-0\" class=\"reference\"><a href=\"#cite_note-TOI_19_May_2022-4\">[4]</a></sup><sup id=\"cite_ref-Aaj_Tak_terror_funding_case_5-0\" class=\"reference\"><a href=\"#cite_note-Aaj_Tak_terror_funding_case-5\">[5]</a></sup><sup id=\"cite_ref-NDTV_convicted_6-0\" class=\"reference\"><a href=\"#cite_note-NDTV_convicted-6\">[6]</a></sup> and was sentenced to life imprisonment.<sup id=\"cite_ref-7\" class=\"reference\"><a href=\"#cite_note-7\">[7]</a></sup>\n</p>"',
+        totimestamp(now()));
+
+SELECT *
+FROM wikipedia
+

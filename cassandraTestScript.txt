@@ -1,0 +1,14 @@
+create keyspace AOOP with replication = {'class' : 'SimpleStrategy', 'replication_factor':1}
+
+CREATE TABLE users (
+ username text,
+ name text,
+ age int,
+ PRIMARY KEY(username)
+);
+
+INSERT INTO users(username,name,age) VALUES ('aali24','Ali Amin',34);
+INSERT INTO users(username,name,age) VALUES ('jack01','Jack David',23);
+INSERT INTO users(username,name,age) VALUES ('ninopk','Nina Rehman',34);
+
+SELECT * FROM users;
