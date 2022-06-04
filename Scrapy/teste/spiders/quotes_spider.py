@@ -11,7 +11,7 @@ cluster = Cluster(['localhost'])
 session = cluster.connect('aoop')
 
 # Prepared Statments Cassandra
-insertCassandra = session.prepare("INSERT INTO wikipedia(id, link, title, content, dateTime) VALUES (blobAsTimeuuid(now()), ?, ?, ?, totimestamp(now()));")
+insertCassandra = session.prepare("INSERT INTO wikipedia(id, link, title, content, dateTime, hash, nPalavras, caracteres) VALUES (blobAsTimeuuid(now()), ?, ?, ?, totimestamp(now()), ?, ?, ?);")
 
 import pymongo
 from pymongo import MongoClient
@@ -59,20 +59,32 @@ class QuotesSpider(scrapy.Spider):
                     # Tirar o link da response
                     r = str(response).split(' ')
                     r = r[1].split('>')
+
+                    hashA = str(hash(quote.get()))
+
+                    palavras = len((quote.get()).split())
+
+                    caracteres = len(quote.get())
                     
                     yield {
                         'link': r[0],
                         'titulo': title,
                         'resumo': resumo,
+                        'hash': hashA,
+                        'palavras': palavras,
+                        'caracteres': caracteres,
                     }
 
-                    session.execute(insertCassandra, [r[0], title, resumo])
+                    session.execute(insertCassandra, [r[0], title, resumo, hashA, palavras, caracteres])
 
                     #print('sjkbdsakjdkbjsa' + resumo)
                     post = {  'link': r[0],
                         'titulo': title,
                         'resumo': resumo,
-                        'tempo' : datetime.datetime.now()}
+                        'tempo' : datetime.datetime.now(),
+                        'hash': hashA,
+                        'palavras': palavras,
+                        'caracteres': caracteres}
                     collection.insert_one(post)
                     break
 
